@@ -1,4 +1,5 @@
 from math import ceil,floor
+import tkinter
 
 class Point:
     def __init__(self,x = 0,y = 0,level = None, next = None):
@@ -7,8 +8,6 @@ class Point:
         self.level = level if level is not None else 0
         self.next = next if next is not None else None
         
-
-
 class Line:
     def __init__(self):
         self.head = None
@@ -62,7 +61,7 @@ def midpoint(p1,p2):
     return Point((p2.x+p1.x)/2,(p2.y+p1.y)/2,max(p1.level,p2.level)+1)
 
 
-def recursive_print(start):
+def recursive_print(start:Point):
     if start.next is not None:
         print(start.x,start.y,start.next.x,start.next.y)
         print(start.level)
@@ -75,7 +74,7 @@ def recursive_print(start):
 # canvas = tkinter.Canvas(root)
 # canvas.pack()
 
-def recursive_draw(start):
+def recursive_draw(start:Point):
     if start.next is not None:
         # canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill="red", width=3)
         recursive_draw(start.next)
@@ -100,8 +99,10 @@ def bezierInterpolate(line:Line):
             temp2.pushback(temp.x,temp.y,temp.level)
             temp = temp.next
         
+        print(temp2.lineLength(),temp2.head.x)
         result1 = bezierInterpolate(temp1)
         result2 = bezierInterpolate(temp2)
+        recursive_print(result2.head)
         temp3 = Line()
 
         temp = result1.head
@@ -109,8 +110,8 @@ def bezierInterpolate(line:Line):
             temp3.pushback(temp.x,temp.y,temp.level)
             temp = temp.next
             if temp.next is None:
-                lev = max(temp.level,result2.head.level)
                 mid_temp = midpoint(temp,result2.head)
+                temp3.pushback(mid_temp.x,mid_temp.y,mid_temp.level)
 
         temp = result2.head
         while(temp):
@@ -119,22 +120,56 @@ def bezierInterpolate(line:Line):
         
         return temp3
 
+def bezierCurve(line:Line,iteration):
+    setup = line
+    for i in range(iteration):
+        temp = Line()
+        tempbezier = bezierInterpolate(setup)
+        tempHead = tempbezier.head
+        temp.pushback(tempHead.x,tempHead.y,0)
+        while(tempHead.next):
+            print("X")
+            if(tempHead.level!=0):
+                print("Y")
+                temp.pushback(tempHead.x,tempHead.y,0)
+            tempHead = tempHead.next
+        temp.pushback(tempHead.x,tempHead.y,0)
+        setup = temp
+    return setup
 
+
+root = tkinter.Tk()
+canvas = tkinter.Canvas(root)
+canvas.pack()
+
+def recursive_draw(start:Point,color:str):
+    if start.next is not None:
+        canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3)
+        recursive_draw(start.next,color)
+    else:
+        pass
 
 lines = Line()
-lines.head = Point(5,10)
-lines.pushback(5,200)
-lines.pushback(110,200)
-lines.pushback(150,350)
+lines.pushback(70,250)
+lines.pushback(20,110)
+lines.pushback(220,60)
+# lines.pushback(200,200)
 # print
-# lines.insertAt(1,150,150)
-bejir = bezierCurve(lines,2)
+# lines.insertAt(1,150),150)
+# bejir = (bezierCurve(lines,1))
 # print(bejir)
 
 # recursive_print(lines.head)
-recursive_print(bejir.head)
-
 print("PASS")
+# recursive_print(bejir.head)
+
+
+
+# recursive_draw(lines.head,'red')
+# recursive_draw(bejir.head,'blue')
+
+for i in range(0,50):
+    recursive_draw(bezierCurve(lines,i).head,'red')
 
 # print(midpoint(lines.head,lines.head.next,max(lines.head.level,lines.head.next.level)).level)
-# root.mainloop()
+root.mainloop()
