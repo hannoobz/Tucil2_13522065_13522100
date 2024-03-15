@@ -1,8 +1,5 @@
-import tkinter
-
-root = tkinter.Tk()
-canvas = tkinter.Canvas(root)
-canvas.pack()
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Point:
     def __init__(self,x = 0,y = 0, next = None):
@@ -54,10 +51,10 @@ class Line:
             temp = temp.next
         return count
     
-def recursive_draw(start:Point,color:str):
+def recursive_draw(start:Point):
     if start.next is not None:
-        canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3)
-        recursive_draw(start.next,color)
+        plt.plot((start.x,start.next.x),(start.y,start.next.y), marker = 'o')
+        recursive_draw(start.next)
     else:
         pass
     
@@ -72,23 +69,22 @@ def R0(P0:Point, P1:Point, P2:Point, t):
     Q1 = Bt(P1, P2, t)
     return Bt(Q0, Q1, t)
 
-#Create points incremented by t, until t >= 1:
+#Create points incremented by t, until tNew > 1:
 def BezierBruteForce(t, line:Line, P0:Point, P1:Point, P2:Point):
     tNew = 0
-    while tNew < 1:
-        line.pushback(R0(P0, P1, P2, t))
+    while tNew <= 1:
+        line.pushback(R0(P0, P1, P2, tNew))
         tNew += t
 
-P0 = Point (70,250)
-P1 = Point (20,110)
-P2 = Point (220,60)
+P0 = Point (20,20)
+P1 = Point (80,110)
+P2 = Point (140,20)
 
 lines = Line()
 lines.pushback(P0)
 lines.pushback(P1)
 lines.pushback(P2)
-BezierBruteForce(0.7, lines, P0, P1, P2)
+BezierBruteForce(0.1, lines, P0, P1, P2)
 
-recursive_draw(lines.head, 'blue')
-
-root.mainloop()
+recursive_draw(lines.head)
+plt.show()
