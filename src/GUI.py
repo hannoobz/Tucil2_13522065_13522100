@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import ttk
+
 from BezierDivideAndConquer import *        
 
 class MainWindow(tk.Frame):
@@ -12,6 +14,9 @@ class MainWindow(tk.Frame):
         self.canvas.tag_bind("token", "<ButtonRelease-1>", self.drag_stop)
         self.canvas.tag_bind("token", "<B1-Motion>", self.drag)
         self.canvas.bind("<Double-1>", self.addControlPoint)
+        self.labelObjArray = []
+        self.labelObjArrayID = []
+
         self.frame = tk.LabelFrame(root, text='Options', padx=10, pady=5)
         self.frame.place(in_=self.canvas, relx=1, rely=0, anchor='ne')
         self.label = tk.Label(self.frame, text='Iterations: ')
@@ -31,25 +36,41 @@ class MainWindow(tk.Frame):
         delta_x = event.x - self._drag_data["x"]
         delta_y = event.y - self._drag_data["y"]
         self.canvas.move(self._drag_data["item"], delta_x, delta_y)
+
+        currTextObj = self.labelObjArray[self.labelObjArrayID.index(self._drag_data["item"])]
+        self.canvas.move(currTextObj, delta_x, delta_y)
+
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
 
     def drag_stop(self, event):
-        self.id_finder(self.points.head,int(self._drag_data["item"]))
+        self.setCoordinateByID(self.points.head,int(self._drag_data["item"]))
         self.recursive_print(self.points.head)
+
+
+        currTextObj = self.labelObjArray[self.labelObjArrayID.index(self._drag_data["item"])]
+        self.canvas.itemconfig(currTextObj, text=f"({self._drag_data['x']}, {self._drag_data['y']})")
+
         self._drag_data["item"] = None
         self._drag_data["x"] = 0
         self._drag_data["y"] = 0
+
         self.redrawCurve()
 
-    def id_finder(self, point : Point, id : int):
+    def setCoordinateByID(self, point : Point, id : int):
         if point.id==id:
             point.x = self._drag_data["x"]
             point.y = self._drag_data["y"]
             return
         if point!=None:
             print(point.id)
-            self.id_finder(point.next,id)
+            self.setCoordinateByID(point.next,id)
+
+    def getValueByID(self,point : Point, ID : int):
+        if point.id==id:
+            return point
+        if point!=None:
+            self.getValueByID(point.next,ID)
         
     def recursive_draw(self,start,dashed,color):
         if start.next!=None:
@@ -74,7 +95,7 @@ class MainWindow(tk.Frame):
         print ("pressed", repr(event.char))
 
     def addControlPoint(self,event):
-        ctrlOval = self.canvas.create_oval(
+        self.canvas.create_oval(
             event.x - 10,
             event.y - 10,
             event.x + 10,
@@ -84,11 +105,14 @@ class MainWindow(tk.Frame):
             fill='red',
             tags=("token",),
         )
+        newPointLabel = self.canvas.create_text(event.x - 20, event.y - 25, text=f"({event.x}, {event.y})", anchor='center')
+        self.labelObjArray.append(newPointLabel)
+        self.labelObjArrayID.append(int(self.canvas.find_closest(event.x, event.y)[0]))
         pp = Point(event.x,event.y,None,int(self.canvas.find_closest(event.x, event.y)[0]))
         print ("added at", pp.x, pp.y,pp.id)
         self.points.pushback(pp)
         self.redrawCurve()
-        
+
     def redrawCurve(self):
         bezier = Line()
         bezierDivConquer(bezier,self.points,int(self.iterations.get()),0)
