@@ -16,7 +16,7 @@ def splitter(line:Line):
 
 def lineMidPoint(line:Line):
     temp = line
-    length = temp.lineLength()
+    length = temp.length
     for i in range(length-1):
         splitter(temp)
         temp = temp.child
@@ -29,13 +29,13 @@ def bezierDivConquer(result:Line,line:Line,iter,curr):
         late = Line()
         while(temp.child):
             early.pushback(temp.head)
-            late.pushfront(temp.tailElement())
+            late.pushfront(temp.tail)
             temp = temp.child
         early.pushback(temp.head)
         late.pushfront(temp.head)
         bezierDivConquer(result,early,iter,curr+1)
-        result.uniquepushback(temp.head)
+        result.pushback(temp.head)
         bezierDivConquer(result,late,iter,curr+1)
     else:
-        result.uniquepushfront(line.head)
-        result.pushback(line.tailElement())
+        result.pushfront(line.head)
+        result.pushback(line.tail)

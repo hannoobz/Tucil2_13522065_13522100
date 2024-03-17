@@ -2,7 +2,11 @@ import tkinter as tk
 import timeit
 from tkinter import ttk
 from BezierBruteForce import *
-from BezierDivideAndConquer import *        
+from BezierDivideAndConquer import *   
+from BezierDariPakRin import *
+
+import sys
+sys.setrecursionlimit(2**31-1)
 
 class MainWindow(tk.Frame):
     def __init__(self ,parent):
@@ -116,21 +120,21 @@ class MainWindow(tk.Frame):
         newPointLabel = self.canvas.create_text(event.x - 20, event.y - 25, text=f"({event.x}, {event.y})", anchor='center')
         self.labelObjArray.append(newPointLabel)
         self.labelObjArrayID.append(int(self.canvas.find_closest(event.x, event.y)[0]))
-        pp = Point(event.x,event.y,None,int(self.canvas.find_closest(event.x, event.y)[0]))
+        pp = Point(event.x,event.y,None,None,int(self.canvas.find_closest(event.x, event.y)[0]))
         self.points.pushback(pp)
         self.redrawCurve()
 
     def redrawCurve(self):
         bezier = Line()
         s = timeit.default_timer()
-        bezierDivConquer(bezier,self.points,int(self.iterations.get()),1)
+        bezierDivConquer(bezier,self.points,int(self.iterations.get()),0)
         # BezierBruteForce(0.001,bezier,self.points)
         time = timeit.default_timer() - s
 
         self.canvas.delete("line")
         self.recursive_draw(bezier.head,0,"black")
         self.recursive_draw(self.points.head,1,"black")
-        self.currentPoints = bezier.lineLength()
+        self.currentPoints = (2**int(self.iterations.get()))+1
         self.labelPoint.configure(text=str(self.currentPoints))
         self.labelTime.configure(text=str(round(time,5))+'s')
 
