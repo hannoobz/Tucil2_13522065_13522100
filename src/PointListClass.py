@@ -23,7 +23,7 @@ class Line:
         while(current_point.next):
             current_point = current_point.next
         current_point.next = p
-
+    
     def pushfront(self, a:Point):
         p = a.copy()
         if self.head is None:
@@ -68,3 +68,32 @@ class Line:
             count +=1
             temp = temp.next
         return count
+    
+    def uniquepushback(self, a:Point):
+        p = a.copy()
+        if self.head is None:
+            self.head = p
+            return
+        current_point = self.head
+        while(current_point.next):
+            if current_point.x == p.x and current_point.y == p.y:
+                return
+            current_point = current_point.next
+        if current_point.x == p.x and current_point.y == p.y:
+                return
+        current_point.next = p
+
+    def uniquepushfront(self, a:Point):
+        p = a.copy()
+        if self.head is None:
+            self.head = p
+            return
+        current_point = self.head
+        while(current_point.next):
+            if current_point.x == p.x and current_point.y == p.y:
+                return
+            current_point = current_point.next
+        if current_point.x == p.x and current_point.y == p.y:
+                return
+        p.next = self.head
+        self.head = p

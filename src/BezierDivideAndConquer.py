@@ -34,8 +34,8 @@ def bezierDivConquer(result:Line,line:Line,iter,curr):
         early.pushback(temp.head)
         late.pushfront(temp.head)
         bezierDivConquer(result,early,iter,curr+1)
-        result.pushback(temp.head)
+        result.uniquepushback(temp.head)
         bezierDivConquer(result,late,iter,curr+1)
     else:
-        result.pushfront(line.head)
+        result.uniquepushfront(line.head)
         result.pushback(line.tailElement())
