@@ -21,7 +21,7 @@ def lineMidPoint(line:Line):
         splitter(temp)
         temp = temp.child
 
-def bezierDivConquer(result:Line,line:Line,iter,curr):
+def bezierDivConquer(result:Line,line:Line,iter : int, curr : int, rec : int):
     if iter>curr:
         temp = line
         lineMidPoint(temp)
@@ -33,9 +33,11 @@ def bezierDivConquer(result:Line,line:Line,iter,curr):
             temp = temp.child
         early.pushback(temp.head)
         late.pushfront(temp.head)
-        bezierDivConquer(result,early,iter,curr+1)
+        rec +=bezierDivConquer(result,early,iter,curr+1,rec+1)
         result.pushback(temp.head)
-        bezierDivConquer(result,late,iter,curr+1)
+        rec +=bezierDivConquer(result,late,iter,curr+1,rec+1)
+        return rec
     else:
         result.pushfront(line.head)
         result.pushback(line.tail)
+        return rec
