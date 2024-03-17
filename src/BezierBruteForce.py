@@ -1,29 +1,30 @@
-import matplotlib.pyplot as plt
-import numpy as np
 from PointListClass import *
-    
-def recursive_draw(start:Point):
-    if start.next is not None:
-        plt.plot((start.x,start.next.x),(start.y,start.next.y), marker = 'o')
-        recursive_draw(start.next)
+
+
+def binomialCoeff(n,k):
+    if k==0:
+        return 1
+    if n==k:
+        return 1
     else:
-        pass
+        return binomialCoeff(n-1,k-1)+binomialCoeff(n-1,k)
     
-def Bt(P0:Point, P1:Point, t):
-    new_point = Point(0,0)
-    new_point.x = (1-t)*P0.x + t*P1.x
-    new_point.y = (1-t)*P0.y + t*P1.y
-    return new_point
 
-def R0(P0:Point, P1:Point, P2:Point, t):
-    Q0 = Bt(P0, P1, t)
-    Q1 = Bt(P1, P2, t)
-    return Bt(Q0, Q1, t)
-
-#Create points incremented by t, until tNew > 1:
-def BezierBruteForce(t, line:Line, P0:Point, P1:Point, P2:Point):
-    tNew = 0
-    while tNew <= 1:
-        line.pushback(R0(P0, P1, P2, tNew))
-        tNew += t
-
+def BezierBruteForce(t,result:Line,line:Line):
+    temp = line.head
+    points = []
+    while(temp):
+        points.append(temp)
+        temp = temp.next
+    n = len(points)
+    tNew = 0;
+    while(tNew<=1):
+        px = 0
+        py = 0
+        for i in range(len(points)):
+                bez = (1-tNew)**(len(points)-i-1)*tNew**i
+                bez = bez*binomialCoeff(n-1,i)
+                px += points[i].x*bez
+                py += points[i].y*bez
+        result.uniquepushback(Point(px,py))
+        tNew += t;
