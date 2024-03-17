@@ -21,7 +21,7 @@ def BezierBruteForce(t,result:Line,line:Line):
     while(tNew<=1):
         px = 0
         py = 0
-        for i in range(len(points)):
+        for i in range(n):
                 bez = (1-tNew)**(len(points)-i-1)*tNew**i
                 bez = bez*binomialCoeff(n-1,i)
                 px += points[i].x*bez
