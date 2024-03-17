@@ -19,6 +19,8 @@ class MainWindow(tk.Frame):
         self.iterations = tk.StringVar()
         self.spinbox = tk.Spinbox(self.frame, command=self.redrawCurve, from_=1.0, to=12.0, textvariable=self.iterations, width=8, wrap=True)
         self.spinbox.pack()
+        self.resetButton = tk.Button(self.frame, text='Reset', command=self.resetCurve)
+        self.resetButton.pack()
 
     def drag_start(self, event):
         self._drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
@@ -94,6 +96,10 @@ class MainWindow(tk.Frame):
         self.recursive_draw(bezier.head,0,"black")
         self.recursive_draw(self.points.head,1,"black")
 
+    def resetCurve(self):
+        self.points = Line()
+        self.canvas.delete('all')
+        
 if __name__ == "__main__":
     root = tk.Tk()
     MainWindow(root).pack(fill="both", expand=True)
