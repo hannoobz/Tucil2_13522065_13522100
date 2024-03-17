@@ -20,6 +20,8 @@ class MainWindow(tk.Frame):
         self.canvas.bind("<Double-1>", self.addControlPoint)
         self.labelObjArray = []
         self.labelObjArrayID = []
+        self.useBruteForce = tk.IntVar()
+
 
         self.frame = tk.LabelFrame(root, text='Options', padx=10, pady=5)
         self.frame.place(in_=self.canvas, relx=1, rely=0, anchor='ne')
@@ -27,9 +29,12 @@ class MainWindow(tk.Frame):
         self.label.pack()
         self.iterations = tk.StringVar()
         self.spinbox = tk.Spinbox(self.frame, command=self.redrawCurve, from_=1.0, to=12.0, textvariable=self.iterations, width=8, wrap=True)
+        self.spinbox.bind("<Return>", self.updatespinbox)
         self.spinbox.pack()
         self.resetButton = tk.Button(self.frame, text='Reset', command=self.resetCurve)
         self.resetButton.pack()
+        self.bruteForceCheckBox = tk.Checkbutton(self.frame,text='Use Brute Force?',variable=self.useBruteForce,onvalue=1, offvalue=0, command=self.bruteForceToggle)
+        self.bruteForceCheckBox.pack()
         self.labelPointHeader = tk.Label(self.frame, text='Points: ')
         self.labelPointHeader.pack()
         self.currentPoints = 0
@@ -43,7 +48,22 @@ class MainWindow(tk.Frame):
         self.labelRecursion.pack()
         self.labelRecursionCount = tk.Label(self.frame, text=str(0))
         self.labelRecursionCount.pack()
+    
+    def updatespinbox(self,placeholder):
+        self.redrawCurve()
 
+    def bruteForceToggle(self):
+        if self.useBruteForce.get():
+            self.label.configure(text="Increment: ")
+            self.spinbox.configure(command=self.redrawCurve, from_=0.0001, to=1,increment=0.01, textvariable=self.iterations, width=8, wrap=True)
+        else:
+            self.label.configure(text='Iterations: ')
+            self.spinbox.configure(command=self.redrawCurve, from_=int(1), to=int(12),increment=1,textvariable=self.iterations, width=8, wrap=True)
+
+        try:
+            self.redrawCurve()
+        except:
+            pass
 
     def drag_start(self, event):
         self._drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
@@ -73,6 +93,7 @@ class MainWindow(tk.Frame):
 
         self.redrawCurve()
 
+
     def setCoordinateByID(self, point : Point, id : int):
         if point.id==id:
             point.x = self._drag_data["x"]
@@ -91,7 +112,6 @@ class MainWindow(tk.Frame):
         if start.next!=None:
             if(dashed):
                 line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line", dash=(1,5))
-                
             else:
                 line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line")
             self.canvas.tag_lower(line)
@@ -129,19 +149,21 @@ class MainWindow(tk.Frame):
 
     def redrawCurve(self):
         bezier = Line()
-        s = timeit.default_timer()
-        rec = bezierDivConquer(bezier,self.points,int(self.iterations.get()),0,0)
-        # BezierBruteForce(0.004,bezier,self.points)
-        time = timeit.default_timer() - s
-
+        if self.useBruteForce.get():
+            s = timeit.default_timer()
+            t = float(self.iterations.get())
+            if t>=0.00006:  # SEGFAULT IF LOWER
+                BezierBruteForce(t,bezier,self.points)
+                time = timeit.default_timer() - s
+                self.currentPoints = bezier.length
+        else:
+            s = timeit.default_timer()
+            rec = bezierDivConquer(bezier,self.points,int(self.iterations.get()),0,0)
+            time = timeit.default_timer() - s
+            self.currentPoints = (2**int(self.iterations.get()))+1
         self.canvas.delete("line")
         self.recursive_draw(bezier.head,0,"black")
         self.recursive_draw(self.points.head,1,"black")
-        a = True
-        if a:
-            self.currentPoints = (2**int(self.iterations.get()))+1
-        else:
-            self.currentPoints = bezier.length
         self.labelPoint.configure(text=str(self.currentPoints))
         self.labelTime.configure(text=str(round(time,5))+'s')
         try:
