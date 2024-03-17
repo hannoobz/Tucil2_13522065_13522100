@@ -90,7 +90,7 @@ class MainWindow(tk.Frame):
     def recursive_draw(self,start,dashed,color):
         if start.next!=None:
             if(dashed):
-                line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line", dash=(20,20))
+                line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line", dash=(1,5))
                 
             else:
                 line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line")
