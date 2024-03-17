@@ -26,5 +26,5 @@ def BezierBruteForce(t,result:Line,line:Line):
                 bez = bez*binomialCoeff(n-1,i)
                 px += points[i].x*bez
                 py += points[i].y*bez
-        result.uniquepushback(Point(px,py))
+        result.pushback(Point(px,py))
         tNew += t;
