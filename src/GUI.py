@@ -3,7 +3,6 @@ import timeit
 from tkinter import ttk
 from BezierBruteForce import *
 from BezierDivideAndConquer import *   
-from BezierDariPakRin import *
 
 import sys
 sys.setrecursionlimit(2**31-1)
