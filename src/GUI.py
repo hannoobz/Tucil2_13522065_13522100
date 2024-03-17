@@ -39,6 +39,10 @@ class MainWindow(tk.Frame):
         self.labelTimer.pack()
         self.labelTime = tk.Label(self.frame, text=str(0))
         self.labelTime.pack()
+        self.labelRecursion = tk.Label(self.frame, text='Recursion Count: ')
+        self.labelRecursion.pack()
+        self.labelRecursionCount = tk.Label(self.frame, text=str(0))
+        self.labelRecursionCount.pack()
 
 
     def drag_start(self, event):
@@ -126,16 +130,26 @@ class MainWindow(tk.Frame):
     def redrawCurve(self):
         bezier = Line()
         s = timeit.default_timer()
-        bezierDivConquer(bezier,self.points,int(self.iterations.get()),0)
-        # BezierBruteForce(0.001,bezier,self.points)
+        rec = bezierDivConquer(bezier,self.points,int(self.iterations.get()),0,0)
+        # BezierBruteForce(0.004,bezier,self.points)
         time = timeit.default_timer() - s
 
         self.canvas.delete("line")
         self.recursive_draw(bezier.head,0,"black")
         self.recursive_draw(self.points.head,1,"black")
-        self.currentPoints = (2**int(self.iterations.get()))+1
+        a = True
+        if a:
+            self.currentPoints = (2**int(self.iterations.get()))+1
+        else:
+            self.currentPoints = bezier.length
         self.labelPoint.configure(text=str(self.currentPoints))
         self.labelTime.configure(text=str(round(time,5))+'s')
+        try:
+            self.labelRecursionCount.configure(text=str(format(rec,'g')))
+        except OverflowError:
+            self.labelRecursionCount.configure(text="INT OVERFLOW")
+        except:
+            self.labelRecursionCount.configure(text="0")
 
     def resetCurve(self):
         self.points = Line()
