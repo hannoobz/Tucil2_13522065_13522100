@@ -1,11 +1,12 @@
 class Point:
-    def __init__(self,x = 0,y = 0, next = None,chr = None ,chl = None):
+    def __init__(self,x = 0,y = 0, next = None, id = None):
         self.x = x if x is not None else 0
         self.y = y if y is not None else 0
         self.next = next if next is not None else None
+        self.id = id if id is not None else None
     
     def copy(self):
-        return Point(self.x,self.y)
+        return Point(self.x,self.y,None,self.id)
 
     
 class Line:
