@@ -1,6 +1,7 @@
 import tkinter as tk
+import timeit
 from tkinter import ttk
-
+from BezierBruteForce import *
 from BezierDivideAndConquer import *        
 
 class MainWindow(tk.Frame):
@@ -26,6 +27,16 @@ class MainWindow(tk.Frame):
         self.spinbox.pack()
         self.resetButton = tk.Button(self.frame, text='Reset', command=self.resetCurve)
         self.resetButton.pack()
+        self.labelPointHeader = tk.Label(self.frame, text='Points: ')
+        self.labelPointHeader.pack()
+        self.currentPoints = 0
+        self.labelPoint = tk.Label(self.frame, text=str(self.currentPoints))
+        self.labelPoint.pack()
+        self.labelTimer = tk.Label(self.frame, text='Runtime: ')
+        self.labelTimer.pack()
+        self.labelTime = tk.Label(self.frame, text=str(0))
+        self.labelTime.pack()
+
 
     def drag_start(self, event):
         self._drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
@@ -39,18 +50,16 @@ class MainWindow(tk.Frame):
 
         currTextObj = self.labelObjArray[self.labelObjArrayID.index(self._drag_data["item"])]
         self.canvas.move(currTextObj, delta_x, delta_y)
+        
+        self.canvas.itemconfig(currTextObj, text=f"({self._drag_data['x']}, {self._drag_data['y']})")
 
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
 
     def drag_stop(self, event):
         self.setCoordinateByID(self.points.head,int(self._drag_data["item"]))
-        self.recursive_print(self.points.head)
-
-
         currTextObj = self.labelObjArray[self.labelObjArrayID.index(self._drag_data["item"])]
         self.canvas.itemconfig(currTextObj, text=f"({self._drag_data['x']}, {self._drag_data['y']})")
-
         self._drag_data["item"] = None
         self._drag_data["x"] = 0
         self._drag_data["y"] = 0
@@ -63,7 +72,6 @@ class MainWindow(tk.Frame):
             point.y = self._drag_data["y"]
             return
         if point!=None:
-            print(point.id)
             self.setCoordinateByID(point.next,id)
 
     def getValueByID(self,point : Point, ID : int):
@@ -109,20 +117,28 @@ class MainWindow(tk.Frame):
         self.labelObjArray.append(newPointLabel)
         self.labelObjArrayID.append(int(self.canvas.find_closest(event.x, event.y)[0]))
         pp = Point(event.x,event.y,None,int(self.canvas.find_closest(event.x, event.y)[0]))
-        print ("added at", pp.x, pp.y,pp.id)
         self.points.pushback(pp)
         self.redrawCurve()
 
     def redrawCurve(self):
         bezier = Line()
-        bezierDivConquer(bezier,self.points,int(self.iterations.get()),0)
+        s = timeit.default_timer()
+        bezierDivConquer(bezier,self.points,int(self.iterations.get()),1)
+        # BezierBruteForce(0.001,bezier,self.points)
+        time = timeit.default_timer() - s
+
         self.canvas.delete("line")
         self.recursive_draw(bezier.head,0,"black")
         self.recursive_draw(self.points.head,1,"black")
+        self.currentPoints = bezier.lineLength()
+        self.labelPoint.configure(text=str(self.currentPoints))
+        self.labelTime.configure(text=str(round(time,5))+'s')
 
     def resetCurve(self):
         self.points = Line()
         self.canvas.delete('all')
+        self.currentPoints = 0
+        self.labelPoint.configure(text=str(self.currentPoints))
         
 if __name__ == "__main__":
     root = tk.Tk()
