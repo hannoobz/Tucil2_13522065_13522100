@@ -264,10 +264,9 @@ class MainWindow(tk.Frame):
             if type(t) is int and t>=0:
                 s = timeit.default_timer()
                 bezierDivConquer(bezier,self.points,t,0)
-                print(bezier.length)
                 time = timeit.default_timer() - s
-                self.currentPoints = (2**int(self.iterations.get()))+1
 
+        self.currentPoints = bezier.length
         if self.dontClearLinesVal==True:
             self.canvas.delete("dashline")
             color= self.color[randint(0,len(self.color)-1)]
