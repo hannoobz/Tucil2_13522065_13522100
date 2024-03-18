@@ -3,6 +3,7 @@ import timeit
 from tkinter import ttk
 from BezierBruteForce import *
 from BezierDivideAndConquer import *   
+from random import randint
 
 import sys
 sys.setrecursionlimit(2**31-1)
@@ -32,6 +33,9 @@ class MainWindow(tk.Frame):
         self.pointY = tk.StringVar()
         self.iterations.set(str(6))
         self.increment.set(str(0.02))
+        self.dontClearLinesGetter = tk.IntVar()
+        self.color = ["red","orange","yellow","green","blue","purple","cyan","pink","brown","gold"]
+        self.dontClearLinesVal = False
 
 
         self.frame = tk.LabelFrame(root, text='Options', padx=10, pady=5)
@@ -58,6 +62,8 @@ class MainWindow(tk.Frame):
         self.pointYBox.bind("<Button-1>", self.updateCoordinateBySpinbox)
         self.bruteForceCheckBox = tk.Checkbutton(self.frame,text='Use Brute Force?',variable=self.useBruteForce,onvalue=1, offvalue=0, command=self.bruteForceToggle)
         self.bruteForceCheckBox.pack()
+        self.dontClearLinesCheckBox = tk.Checkbutton(self.frame,text='Keep Previous Iteration?',variable=self.dontClearLinesGetter,onvalue=1, offvalue=0, command=self.dontClearLinesToggle)
+        self.dontClearLinesCheckBox.pack()
         self.labelPointHeader = tk.Label(self.frame, text='Points: ')
         self.labelPointHeader.pack()
         self.currentPoints = 0
@@ -108,6 +114,14 @@ class MainWindow(tk.Frame):
         except:
             pass
 
+    def dontClearLinesToggle(self):
+        if self.dontClearLinesGetter.get():
+            self.dontClearLinesVal = True
+        else:
+            self.dontClearLinesVal = False
+        self.redrawCurve()
+
+
     def getPointMapID(self,point,mapped):
         if point is None:
             return None
@@ -156,6 +170,8 @@ class MainWindow(tk.Frame):
         self._drag_data["y"] = 0
         self.pointX.set(event.x)
         self.pointY.set(event.y)
+        self.canvas.delete("line")
+        self.canvas.delete("dashline")
         self.redrawCurve()
 
     def setCoordinateByID(self, point : Point, id : int,x,y):
@@ -175,7 +191,7 @@ class MainWindow(tk.Frame):
     def recursive_draw(self,start,dashed,color):
         if start.next!=None:
             if(dashed):
-                line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line", dash=(5,1))
+                line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="dashline", dash=(5,1))
             else:
                 line = self.canvas.create_line(start.x,start.y,start.next.x,start.next.y, fill=color, width=3, tags="line")
             self.canvas.tag_lower(line)
@@ -231,6 +247,7 @@ class MainWindow(tk.Frame):
         self.selectedPoint.set(self.inversePointDictionary[int(self.canvas.find_closest(event.x, event.y)[0])])
         self.pointX.set(event.x)
         self.pointY.set(event.y)
+        self.canvas.delete("line")
         self.redrawCurve()
 
     def redrawCurve(self):
@@ -249,8 +266,17 @@ class MainWindow(tk.Frame):
                 bezierDivConquer(bezier,self.points,t,0)
                 time = timeit.default_timer() - s
                 self.currentPoints = (2**int(self.iterations.get()))+1
-        self.canvas.delete("line")
-        self.recursive_draw(bezier.head,0,"black")
+
+        if self.dontClearLinesVal==True:
+            self.canvas.delete("dashline")
+            color= self.color[randint(0,len(self.color)-1)]
+            self.recursive_draw(bezier.head,0,color)
+            pass
+        else:
+            self.canvas.delete("line")
+            self.canvas.delete("dashline")
+            self.recursive_draw(bezier.head,0,"black")
+
         self.recursive_draw(self.points.head,1,"gray")
         self.labelPoint.configure(text=str(self.currentPoints))
         self.labelTime.configure(text=str(round(time,5))+'s')
