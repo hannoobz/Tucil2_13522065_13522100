@@ -69,10 +69,7 @@ class MainWindow(tk.Frame):
         self.labelTimer.pack()
         self.labelTime = tk.Label(self.frame, text=str(0))
         self.labelTime.pack()
-        self.labelRecursion = tk.Label(self.frame, text='Recursion Count: ')
-        self.labelRecursion.pack()
-        self.labelRecursionCount = tk.Label(self.frame, text=str(0))
-        self.labelRecursionCount.pack()
+
     
     def createGrid(self):
         for i in range(0, 800, 25):
@@ -249,7 +246,7 @@ class MainWindow(tk.Frame):
             t = int(self.iterations.get())
             if type(t) is int:
                 s = timeit.default_timer()
-                rec = bezierDivConquer(bezier,self.points,t,0,0)
+                bezierDivConquer(bezier,self.points,t,0)
                 time = timeit.default_timer() - s
                 self.currentPoints = (2**int(self.iterations.get()))+1
         self.canvas.delete("line")
@@ -257,12 +254,6 @@ class MainWindow(tk.Frame):
         self.recursive_draw(self.points.head,1,"gray")
         self.labelPoint.configure(text=str(self.currentPoints))
         self.labelTime.configure(text=str(round(time,5))+'s')
-        try:
-            self.labelRecursionCount.configure(text=str(format(rec,'g')))
-        except OverflowError:
-            self.labelRecursionCount.configure(text="INT OVERFLOW")
-        except:
-            self.labelRecursionCount.configure(text="0")
 
     def resetCurve(self):
         self.points = Line()
