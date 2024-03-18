@@ -18,7 +18,7 @@ Program simulasi Bézier Curve dengan algoritma Divide and Conquer, dengan algor
 ## Screenshots
 ![Screenshot Program](https://cdn.discordapp.com/attachments/669015264242958339/1219330480990589028/image.png?ex=660ae900&is=65f87400&hm=93ddc43c129044c74aa70345f8399981e130042c48611f085a4585185f873070&)
 
-## Cara Compile
+## Cara Compile Program
 1. Pastikan python3 sudah terpasang
 2. Pastikan module tkinter dan pyinstaller sudah terpasang
 3. Masuk ke folder ./src
@@ -28,7 +28,7 @@ Program simulasi Bézier Curve dengan algoritma Divide and Conquer, dengan algor
 pyinstaller --onefile GUI.py
 ```
 
-## Setup
+## Cara Menjalankan Program
 - Masuk ke ./bin
 - Run GUI.exe atau GUI_Ubuntu
 
