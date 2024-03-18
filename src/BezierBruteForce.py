@@ -1,6 +1,5 @@
 from PointListClass import *
 
-
 def binomialCoeff(n,k):
     if k==0:
         return 1
@@ -10,21 +9,19 @@ def binomialCoeff(n,k):
         return binomialCoeff(n-1,k-1)+binomialCoeff(n-1,k)
     
 
-def BezierBruteForce(t,result:Line,line:Line):
+def BezierBruteForce(t:float,result:Line,line:Line):
     temp = line.head
-    points = []
-    while(temp):
-        points.append(temp)
-        temp = temp.next
-    n = len(points)
+    n = line.length
     tNew = 0;
-    while(tNew<=1):
+    while tNew<=1:
         px = 0
         py = 0
         for i in range(n):
-                bez = (1-tNew)**(len(points)-i-1)*tNew**i
-                bez = bez*binomialCoeff(n-1,i)
-                px += points[i].x*bez
-                py += points[i].y*bez
+            bez = ((1-tNew)**(n-i-1))*(tNew**i)*binomialCoeff(n-1,i)
+            px += temp.x*bez
+            py += temp.y*bez
+            temp = temp.next
+        temp = line.head
         result.pushback(Point(px,py))
-        tNew += t;
+        tNew += t
+    result.pushback(line.tail)
