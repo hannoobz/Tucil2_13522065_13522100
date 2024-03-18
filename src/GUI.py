@@ -38,7 +38,7 @@ class MainWindow(tk.Frame):
         self.frame.place(in_=self.canvas, relx=1, rely=0, anchor='ne')
         self.label = tk.Label(self.frame, text='Iterations: ')
         self.label.pack()
-        self.spinbox = tk.Spinbox(self.frame, command=self.redrawCurve, from_=1.0, to=12.0, textvariable=self.iterations, width=8, wrap=True)
+        self.spinbox = tk.Spinbox(self.frame, command=self.redrawCurve, from_=0, to=12, textvariable=self.iterations, width=8, wrap=True)
         self.spinbox.bind("<Return>", self.updatespinbox)
         self.spinbox.pack()
         self.resetButton = tk.Button(self.frame, text='Reset', command=self.resetCurve)
@@ -244,7 +244,7 @@ class MainWindow(tk.Frame):
                 self.currentPoints = bezier.length
         else:
             t = int(self.iterations.get())
-            if type(t) is int:
+            if type(t) is int and t>=0:
                 s = timeit.default_timer()
                 bezierDivConquer(bezier,self.points,t,0)
                 time = timeit.default_timer() - s
