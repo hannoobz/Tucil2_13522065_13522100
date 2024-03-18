@@ -41,8 +41,6 @@ class MainWindow(tk.Frame):
         self.spinbox = tk.Spinbox(self.frame, command=self.redrawCurve, from_=0, to=12, textvariable=self.iterations, width=8, wrap=True)
         self.spinbox.bind("<Return>", self.updatespinbox)
         self.spinbox.pack()
-        self.resetButton = tk.Button(self.frame, text='Reset', command=self.resetCurve)
-        self.resetButton.pack()
         self.pointChosenLabel = ttk.Label(self.frame,text="Control Point :")
         self.pointChosenLabel.pack()
         self.pointChosen = ttk.Combobox(self.frame,width=5,textvariable=self.selectedPoint)
@@ -69,6 +67,8 @@ class MainWindow(tk.Frame):
         self.labelTimer.pack()
         self.labelTime = tk.Label(self.frame, text=str(0))
         self.labelTime.pack()
+        self.resetButton = tk.Button(self.frame, text='Reset', command=self.resetCurve)
+        self.resetButton.pack()
 
     
     def createGrid(self):
