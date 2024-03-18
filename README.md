@@ -5,7 +5,8 @@ Tugas Kecil 2 IF2211 Strategi Algoritma -  Divide and Conquer
 * [Anggota](#anggota)
 * [Deskripsi Singkat](#deskripsi-singkat)
 * [Screenshots](#screenshots)
-* [Setup](#setup)
+* [Cara Compile Program](#cara-compile-program)
+* [Cara Menjalankan Program](#cara-menjalankan-program)
 * [Usage](#usage)
 
 ## Anggota 
