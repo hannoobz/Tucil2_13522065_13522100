@@ -34,7 +34,7 @@ class MainWindow(tk.Frame):
         self.iterations.set(str(6))
         self.increment.set(str(0.02))
         self.dontClearLinesGetter = tk.IntVar()
-        self.color = ["red","orange","yellow","green","blue","purple","cyan","pink","brown","gold"]
+        self.color = ["red","orange","yellow","green","blue","purple","cyan","brown","gold"]
         self.dontClearLinesVal = False
 
 
@@ -264,6 +264,7 @@ class MainWindow(tk.Frame):
             if type(t) is int and t>=0:
                 s = timeit.default_timer()
                 bezierDivConquer(bezier,self.points,t,0)
+                print(bezier.length)
                 time = timeit.default_timer() - s
                 self.currentPoints = (2**int(self.iterations.get()))+1
 
