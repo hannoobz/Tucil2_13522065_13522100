@@ -19,6 +19,17 @@ Program simulasi Bézier Curve dengan algoritma Divide and Conquer, dengan algor
 ![Screenshot Program](https://cdn.discordapp.com/attachments/669015264242958339/1219330480990589028/image.png?ex=660ae900&is=65f87400&hm=93ddc43c129044c74aa70345f8399981e130042c48611f085a4585185f873070&)
 
 ## Setup
+- Masuk ke ./bin
+- Run GUI.exe atau GUI_Ubuntu
 
 ## Usage
-
+- Klik 2 kali pada kanvas untuk menambah poin
+- Poin dapat dipindahkan dengan drag and drop
+- Terdapat Options di kanan atas program sebagai pengaturan program
+- Posisi setiap poin dapat diatur, pilih poin pada Control Point dan pilih XY Coordinate untuk mengatur posisi poin
+- Kurva dapat diatur menggunakan Iterations, Semakin banyak iterations, semakin halus kurvanya
+- Jika menggunakan checkbox "Use Brute Force?", Opsi Iterations akan berubah menjadi increment. Semakin rendah increment, semakin halus kurvanya
+- Klik "Keep Previous Iteration?" Untuk 
+- Label "Points:" melambangkan jumlah poin di dalam kurva
+- Label "Runtime:" melambangkan waktu eksekusi program
+- Klik Tombol "Reset" untuk menghapus kanvas
