@@ -102,7 +102,7 @@ class MainWindow(tk.Frame):
             self.spinbox.configure(command=self.redrawCurve, from_=0.0001, to=1,increment=0.0001, textvariable=self.increment, width=8, wrap=True)
         else:
             self.label.configure(text='Iterations: ')
-            self.spinbox.configure(command=self.redrawCurve, from_=int(1), to=int(12),increment=1,textvariable=self.iterations, width=8, wrap=True)
+            self.spinbox.configure(command=self.redrawCurve, from_=int(0), to=int(12),increment=1,textvariable=self.iterations, width=8, wrap=True)
         try:
             self.redrawCurve()
         except:
