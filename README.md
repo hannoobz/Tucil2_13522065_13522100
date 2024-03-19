@@ -11,7 +11,7 @@ Tugas Kecil 2 IF2211 Strategi Algoritma -  Divide and Conquer
 
 ## Anggota 
 1. Rafiki Prawira Harianto (13522065)
-2. M Hanief Fatkhan Nashrullah (13522099)
+2. M Hanief Fatkhan Nashrullah (13522100)
 
 ## Deskripsi Singkat
 Program simulasi Bézier Curve dengan algoritma Divide and Conquer, dengan algoritma Brute Force sebagai pembanding.
