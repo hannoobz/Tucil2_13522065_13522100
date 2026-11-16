@@ -1,6 +1,8 @@
 # Tucil2_13522065_13522100
 Tugas Kecil 2 IF2211 Strategi Algoritma -  Divide and Conquer
 
+note: go check the [cpp version](https://github.com/hannoobz/bezier-curve/tree/main) :D
+
 ## Table of Contents
 * [Anggota](#anggota)
 * [Deskripsi Singkat](#deskripsi-singkat)
